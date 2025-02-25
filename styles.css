@@ -1,0 +1,131 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 80px;
+    margin: 0;
+}
+
+/* Styles pour le canvas en arrière-plan */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 100%;
+    z-index: -1; /* Placer le canvas derrière tout le contenu */
+}
+
+/* Styles existants avec transparence pour mieux voir l'arrière-plan */
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8); /* Ajout de transparence */
+    position: relative; /* Pour s'assurer qu'il est au-dessus du canvas */
+    z-index: 10;
+}
+
+.newpostcontainer {
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(168, 57, 14, 0.8); /* Ajout de transparence */
+    margin-bottom: 5px;
+    position: relative;
+    z-index: 10;
+}
+
+.posts {
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(168, 57, 14, 0.8); /* Ajout de transparence */
+    position: relative;
+    z-index: 10;
+}
+
+.post {
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8); /* Ajout de transparence */
+    position: relative;
+    z-index: 10;
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #e66800;
+    color: white;
+    width: 40%;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    border-radius: 4%;
+}
+
+.plchd {
+    background-color: bisque;
+}
+
+.secContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: rgba(210, 218, 226, 0.8); /* Ajout de transparence */
+    position: relative;
+    z-index: 10;
+}
+
+.listUsers {
+    border-style: solid;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    resize: vertical;
+}
+
+input {
+    width: 95%;
+}
+
+.messageContainer {
+    border-style: solid;
+}
+
+.backHome {
+    width: 100%;
+}
+
+button:hover {
+    background-color: #853c00;
+}
+
+/* Style pour la barre de navigation */
+.navigation {
+    position: relative;
+    z-index: 100; /* S'assurer que la navigation reste au-dessus du canvas */
+}
