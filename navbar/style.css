@@ -15,7 +15,7 @@
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    width: 70px;
+    width: 80px;
     background-color: #a8390e;
     border-radius: 10px;
     z-index: 1000;
@@ -64,7 +64,7 @@
 
 
 .navigation ul li.active a .icon {
-    transform: translateX(75px) translateY(0px);
+    transform: translateX(174%) translateY(-41%);
 }
 
 .navigation ul li a .text {
@@ -81,20 +81,24 @@
 
 .navigation ul li.active a .text {
     opacity: 1;
-    transform: translateX(15px) translateY(20px);
+    transform: translateX(-34px) translateY(0px) rotate(49deg);
 }
+
+
 
 .indicator {
     position: absolute;
-    left: 30%;
+    left: 60%;
     top: 10px;
-    width: 100px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     background-color: #e66800;
-    border-radius: 40%;
+    border-radius: 100%;
     border: 6px solid #d2dae2;
     transition: 0.5s;
 }
+
+
 
 /* .navigation ul li:nth-child(1).active ~ .indicator {
     transform: translateY(calc(70px * 0));

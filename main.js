@@ -38,7 +38,7 @@ function loadPage(page) {
 
 // Charge la page initiale
 document.addEventListener("DOMContentLoaded", () => {
-    loadPage("registration"); // Charge la page d'accueil par défaut
+    loadPage("index"); // Charge la page d'accueil par défaut
 });
 
 // Permet d'appeler loadPage() ailleurs
