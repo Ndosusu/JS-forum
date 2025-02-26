@@ -2,6 +2,7 @@ import { createRegistrationForm } from "./scripts/registration.js";
 import { createIndex } from "./scripts/index.js";
 import { createProfile } from "./scripts/profile.js";
 import { createContact } from "./scripts/contact.js";
+import { createNavigation } from "./scripts/navigation.js";
 
 function loadPage(page) {
     // Supprime uniquement le contenu généré par la page actuelle, pas la navbar
@@ -10,22 +11,20 @@ function loadPage(page) {
         existingContent.remove();
     }
 
+    // Vérifie si la navbar existe déjà, sinon la crée (sauf pour registration)
+    const navigation = document.querySelector(".navigation");
+    if (!navigation && page !== "registration") {
+        createNavigation();
+    } else if (navigation && page === "registration") {
+        navigation.remove(); // Supprime la navbar si on est sur la page d'inscription
+    }
+
     // Crée un conteneur pour la nouvelle page
     const newContent = document.createElement("div");
     newContent.id = "page-content";
     document.body.appendChild(newContent); // Ajoute le contenu sous la navbar
 
-    //retire la navbar sur la page d'inscription/connexion
-    const navigation = document.querySelector(".navigation");
-    if (navigation) {
-        if (page === "registration") {
-            navigation.style.display = "none";
-        } else {
-            navigation.style.display = "block";
-        }
-    }
     // Charge la page demandée
-    // ajouter le nom de la page dans la navbar
     if (page === "registration") {
         createRegistrationForm(newContent);
     } else if (page === "index") {
@@ -33,15 +32,14 @@ function loadPage(page) {
     } else if (page === "profile") {
         createProfile(newContent);
     } else if (page === "contact") {
-        createContact(newContent)
+        createContact(newContent);
     }
 }
 
-
+// Charge la page initiale
 document.addEventListener("DOMContentLoaded", () => {
-            loadPage("registration");
-        });
-
+    loadPage("registration"); // Charge la page d'accueil par défaut
+});
 
 // Permet d'appeler loadPage() ailleurs
 window.loadPage = loadPage;
