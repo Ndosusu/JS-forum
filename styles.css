@@ -72,6 +72,7 @@ input, button {
     margin: 10px 0;
     padding: 10px;
     font-size: 16px;
+    border-radius: 10px;
 }
 
 button {
@@ -83,7 +84,7 @@ button {
     cursor: pointer;
     display: block;
     margin: 10px auto;
-    border-radius: 4%;
+    border-radius: 10px;
 }
 
 .plchd {
@@ -93,13 +94,15 @@ button {
 .secContainer {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    background-color: rgba(210, 218, 226, 0.8); /* Ajout de transparence */
+    background-color: rgba(210, 218, 226, 0.4);
+    border-radius: 10px;
     position: relative;
     z-index: 10;
 }
 
 .listUsers {
     border-style: solid;
+    border-radius: 10px;
 }
 
 textarea {
@@ -114,6 +117,7 @@ input {
 
 .messageContainer {
     border-style: solid;
+    border-radius: 10px;
 }
 
 .backHome {
@@ -124,8 +128,136 @@ button:hover {
     background-color: #853c00;
 }
 
+.listContainer {
+    max-width: 600px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8);
+    position: fixed;
+    right: 10px;
+    max-height: 80%;
+    min-height: 40%;
+    width: 150px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
 /* Style pour la barre de navigation */
 .navigation {
     position: relative;
-    z-index: 100; /* S'assurer que la navigation reste au-dessus du canvas */
+    z-index: 100;
+}
+
+/* Styles pour les catégories*/
+.categories {
+    position: fixed;
+    top: 250px;
+    right: 5%;
+    transform: translateX(calc(-50% - 350px));
+    width: 80px;
+    background-color: #a8390e;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 10px 0;
+}
+
+.categories ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.categories li {
+    position: relative;
+    list-style: none;
+    width: 70px;
+    height: 50px;
+    z-index: 1;
+    text-align: center;
+}
+
+.categories li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 15%;
+}
+
+.categories li.active a .icon {
+    transform: translateX(174%) translateY(-41%);
+}
+
+.categories li a .text {
+    position: relative;
+    color: #fff;
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+    transition: 0.5s;
+    opacity: 0.3;
+    transform: translateX(px);
+    text-align: center;
+}
+
+.categories li.active a .text {
+    opacity: 1;
+    transform: translateX(50px) translateY(15px);
+}
+
+/* Pour éviter les conflits avec la navbar principale */
+.categories a {
+    cursor: pointer;
+}
+
+/* Animation pour l'indicateur des catégories */
+.categories .indicator {
+    position: absolute;
+    left: 60%;
+    top: 10px;
+    width: 80px;
+    height: 30px;
+    background-color: #e66800;
+    border-radius: 10px;
+    border: 6px solid #d2dae2;
+    transition: transform 0.5s, opacity 0.4s, visibility 0.4s, scale 0.4s;
+    transform-origin: center center;
+}
+
+/* Style quand l'indicateur est caché */
+.categories .indicator.hidden {
+    opacity: 0;
+    visibility: hidden;
+    scale: 0.5;
+    /* Pas de modification de la position lors de la disparition */
+}
+
+/* Animation de pop-in pour l'apparition */
+@keyframes popIn {
+    0% {
+        scale: 0.5;
+        opacity: 0;
+    }
+    50% {
+        scale: 1.2;
+    }
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+/* Appliquer l'animation à l'apparition de l'indicateur */
+.categories .indicator:not(.hidden) {
+    animation: popIn 0.4s ease-out;
 }
