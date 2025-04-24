@@ -1,0 +1,302 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+}
+
+/* Styles pour le canvas en arrière-plan */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 100%;
+    z-index: -1; /* Placer le canvas derrière tout le contenu */
+}
+
+/* Styles existants avec transparence pour mieux voir l'arrière-plan */
+.container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 75px;
+    max-width: 600px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8); /* Ajout de transparence */
+    position: relative; /* Pour s'assurer qu'il est au-dessus du canvas */
+    z-index: 10;
+}
+
+.newpostcontainer {
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(168, 57, 14, 0.8); /* Ajout de transparence */
+    margin-bottom: 5px;
+    position: relative;
+    z-index: 10;
+}
+
+#postsContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(168, 57, 14, 0.8); /* Ajout de transparence */
+    position: relative;
+    z-index: 10;
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8); /* Ajout de transparence */
+    position: relative;
+    z-index: 10;
+}
+
+.post > div {
+    display: flex;
+    justify-content: center;
+}
+
+.post > .user-part {
+    align-self: start;
+    align-items: center;
+    column-gap: 5%;
+}
+
+.post > .content-part {
+    flex-direction: column;
+}
+
+.post > .stats-part {
+    column-gap: 35%;
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #e66800;
+    color: white;
+    width: 40%;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    border-radius: 10px;
+}
+
+.plchd {
+    background-color: bisque;
+}
+
+.secContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: rgba(210, 218, 226, 0.4);
+    border-radius: 10px;
+    position: relative;
+    z-index: 10;
+}
+
+.listUsers {
+    border-style: solid;
+    border-radius: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    resize: vertical;
+}
+
+input {
+    width: 95%;
+}
+
+.messageContainer {
+    border-style: solid;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #853c00;
+}
+
+.listContainer {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(228, 137, 101, 0.8);
+    position: fixed;
+    right: 10px;
+    max-height: 80%;
+    min-height: 40%;
+    width: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.listContainer > h1 {
+    font-size: 160%;
+}
+
+#usersList {
+    padding: 0;
+}
+
+#usersList > li {
+    cursor: default;
+}
+
+#usersList > .user {
+    display: block;
+    cursor: pointer;
+}
+
+/* Styles pour les catégories*/
+.categories {
+    position: fixed;
+    top: 67%;
+    left: 0;
+    transform: translateX(-80%);
+    transition: transform 500ms ease-out;
+    width: 80px;
+    background-color: #a8390e;
+    border-radius: 10px;
+    z-index: 10;
+    padding: 10px 0;
+}
+
+.categories:hover {
+    transform: translateX(0);
+}
+
+.categories ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.categories li {
+    position: relative;
+    list-style: none;
+    width: 70px;
+    height: 50px;
+    z-index: 1;
+    text-align: center;
+}
+
+.categories li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 15%;
+}
+
+.categories li.active a .icon {
+    transform: translateX(174%) translateY(-41%);
+}
+
+.categories li a .text {
+    position: relative;
+    color: #fff;
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+    transition: 0.5s;
+    opacity: 0.3;
+    transform: translateX(px);
+    text-align: center;
+}
+
+.categories li.active a .text {
+    opacity: 1;
+    transform: translateX(50px) translateY(15px);
+}
+
+/* Pour éviter les conflits avec la navbar principale */
+.categories a {
+    cursor: pointer;
+}
+
+/* Animation pour l'indicateur des catégories */
+.categories .indicator {
+    position: absolute;
+    left: 60%;
+    top: 10px;
+    width: 80px;
+    height: 30px;
+    background-color: #e66800;
+    border-radius: 10px;
+    border: 6px solid #d2dae2;
+    transition: transform 0.5s, opacity 0.4s, visibility 0.4s, scale 0.4s;
+    transform-origin: center center;
+}
+
+/* Style quand l'indicateur est caché */
+.categories .indicator.hidden {
+    opacity: 0;
+    visibility: hidden;
+    scale: 0.5;
+    /* Pas de modification de la position lors de la disparition */
+}
+
+/* Animation de pop-in pour l'apparition */
+@keyframes popIn {
+    0% {
+        scale: 0.5;
+        opacity: 0;
+    }
+    50% {
+        scale: 1.2;
+    }
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+/* Appliquer l'animation à l'apparition de l'indicateur */
+.categories .indicator:not(.hidden) {
+    animation: popIn 0.4s ease-out;
+}
