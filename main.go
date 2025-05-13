@@ -89,7 +89,7 @@ func main() {
 
 	// COMMENT-RELATED
 	mux.HandleFunc("/api/newComment", api.CreateCommentHandler)
-	mux.HandleFunc("/api/fetchComments", api.FetchAllCommentsHandler)
+	mux.HandleFunc("/api/fetchComments", api.FetchCommentsByPostHandler)
 	mux.HandleFunc("/api/commentFetcher", api.FetchCommentHandler)
 
 	mux.HandleFunc("/ws", handleWS)

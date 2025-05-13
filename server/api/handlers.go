@@ -562,30 +562,41 @@ func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 // ---------------------- COMMENTS-RELATED HANDLERS ----------------------
 
 func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var params map[string]any
+	var comment struct {
+		PostUUID string `json:"post_uuid"`
+		Content  string `json:"content"`
+		UserUUID string `json:"user_uuid"`
+		Username string `json:"username"`
+	}
 
-	err := json.NewDecoder(r.Body).Decode(&params)
-
-	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	newComment, err := dbComment.CreateComment(r.Context(), params)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if comment.PostUUID == "" || comment.Content == "" || comment.UserUUID == "" || comment.Username == "" {
+		http.Error(w, "Missing fields", http.StatusBadRequest)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(newComment)
+	createdComment, err := dbComment.CreateComment(r.Context(), map[string]any{
+		"post_uuid": comment.PostUUID,
+		"content":   comment.Content,
+		"user_uuid": comment.UserUUID,
+		"username":  comment.Username,
+	})
+	if err != nil {
+		http.Error(w, "Failed to create comment", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(createdComment)
 }
 
 func FetchCommentHandler(w http.ResponseWriter, r *http.Request) {
@@ -625,6 +636,28 @@ func FetchCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(commentData); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 	}
+}
+
+func FetchCommentsByPostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	postUUID := r.URL.Query().Get("post_uuid")
+	if postUUID == "" {
+		http.Error(w, "Missing post_uuid parameter", http.StatusBadRequest)
+		return
+	}
+
+	comments, err := dbComment.FetchComment(r.Context(), map[string]any{"post_uuid": postUUID})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(comments)
 }
 
 func FetchAllCommentsHandler(w http.ResponseWriter, r *http.Request) {

@@ -84,6 +84,7 @@ function FetchPosts(container) {
     fetch("/api/fetchAllPosts")
         .then(response => response.json())
         .then(allPosts => {
+            console.log("Posts fetched:", allPosts);
             if (!allPosts) {
                 const noPost = document.createElement("p");
                 noPost.innerHTML = "No posts at the moment."
@@ -100,6 +101,8 @@ function NewPost(post) {
     const newPost = document.createElement("div");
     newPost.className = "post";
 
+    console.log("Rendering post:", post);
+
     newPost.innerHTML = `
         <div class="user-part">
             <img src="${post["profile_picture"]}" alt="Profile Picture" width="64" height="64" />
@@ -114,7 +117,60 @@ function NewPost(post) {
             <p>${post["dislikes"]} dislikes</p>
         </div>
         <p>Posted on ${new Date(post["created_at"]).toString()}</p>
+        <div class="comments-section">
+            <h4>Comments</h4>
+            <ul class="comments-list" id="comments-${post["post_uuid"]}"></ul>
+            <textarea placeholder="Add a comment..." class="comment-input"></textarea>
+            <button class="comment-button" data-post-id="${post["post_uuid"]}">Post Comment</button>
+        </div>
     `;
+
+    console.log("Post UUID:", post["post_uuid"]);
+
+    // Fetch and display comments
+    fetch(`/api/fetchComments?post_uuid=${post["post_uuid"]}`)
+        .then(response => response.json())
+        .then(comments => {
+            console.log("Comments fetched:", comments); // Log les commentaires
+            const commentsList = newPost.querySelector(`#comments-${post["post_uuid"]}`);
+            if (comments.length === 0) {
+                const noComments = document.createElement("p");
+                noComments.textContent = "No comments yet.";
+                commentsList.appendChild(noComments);
+            } else {
+                comments.forEach(comment => {
+                    const commentItem = document.createElement("li");
+                    commentItem.textContent = `${comment.username}: ${comment.content}`;
+                    commentsList.appendChild(commentItem);
+                });
+            }
+        });
+
+    // Add event listener for posting a comment
+    newPost.querySelector(".comment-button").addEventListener("click", async (event) => {
+        const postId = event.target.getAttribute("data-post-id");
+        const commentInput = newPost.querySelector(".comment-input");
+        const commentContent = commentInput.value;
+
+        if (commentContent.trim() === "") return;
+
+        const response = await fetch("/api/newComment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ post_uuid: postId, content: commentContent, username: "current_user" }),
+        });
+
+        if (response.ok) {
+            const newComment = await response.json();
+            const commentsList = newPost.querySelector(`#comments-${postId}`);
+            const commentItem = document.createElement("li");
+            commentItem.textContent = `${newComment.username}: ${newComment.content}`;
+            commentsList.appendChild(commentItem);
+            commentInput.value = "";
+        } else {
+            alert("Failed to post comment.");
+        }
+    });
 
     return newPost;
 }
