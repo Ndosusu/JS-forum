@@ -6,7 +6,7 @@ import { createNavigation } from "./scripts/navigation.js";
 import { createListOfUsers } from "./scripts/listOfUsers.js";
 import { createCategories } from "./scripts/categories.js";
 
-function loadPage(page) {
+async function loadPage(page) {
     // Supprime uniquement le contenu généré par la page actuelle, pas la navbar
     const existingContent = document.getElementById("page-content");
     if (existingContent) {
@@ -49,8 +49,23 @@ function loadPage(page) {
 }
 
 // Charge la page initiale
-document.addEventListener("DOMContentLoaded", () => {
-    loadPage("registration"); // Charge la page d'accueil par défaut
+document.addEventListener("DOMContentLoaded", async () => {
+    let whereToGo;
+    if (!IsUserInfoValid()) {
+        console.log("Cookie invalide ou absent.");
+        whereToGo = "registration";
+    } else {
+        const response = await fetch("/api/imConnected");
+        if (response.ok) {
+            console.log("Utilisateur reconnu par le serveur.");
+            whereToGo = "index";
+        } else {
+            console.warn("Cookie valide, mais le serveur ne reconnaît pas l'utilisateur.");
+            document.cookie = "";
+            whereToGo = "registration";
+        }
+    }
+    loadPage(whereToGo); // Charge la page d'accueil par défaut
 });
 
 // Permet d'appeler loadPage() ailleurs

@@ -24,13 +24,7 @@ func InitConnection() {
 		}
 	}
 
-	// Ouvre la connexion à la base de données ici
-	// Le fichier realTimeDB.db est à la racine, c'est ce fichier qui contient toute la database
-	// Grâce à l'extension sqlite de vscode, nous pouvons visualiser cela plus facilement
-	// Clic droit sur realTimeDB.db
-	// Open database
-	// Magie on peut voir les tables avec les columns et rows
-
+	// Ouvre la connexion à la base de données
 	Db, err = sql.Open("sqlite3", "./realTimeDB.db")
 	if err != nil {
 		log.Fatalf("Erreur lors de l'ouverture de la base de données : %v", err)
@@ -42,6 +36,61 @@ func InitConnection() {
 	}
 
 	log.Println("Connexion à la base de données réussie")
+
+	// Crée les tables si elles n'existent pas
+	createTables()
+}
+
+func createTables() {
+	createUsersTable := `
+    CREATE TABLE IF NOT EXISTS Users (
+        user_uuid VARCHAR(36) PRIMARY KEY NOT NULL,
+        username TEXT UNIQUE,
+        email TEXT UNIQUE,
+        password TEXT,
+        first_name TEXT,
+        last_name TEXT,
+        birth_date TIME,
+        gender TEXT,
+        role TEXT,
+        profile_picture MEDIUMTEXT,
+        created_at TIME
+    );`
+
+	createPostsTable := `
+    CREATE TABLE IF NOT EXISTS Posts (
+        post_uuid VARCHAR(36) PRIMARY KEY NOT NULL,
+        user_uuid VARCHAR(36) NOT NULL,
+        title TEXT,
+        content TEXT,
+        username TEXT,
+        profile_picture MEDIUMTEXT,
+        likes INT,
+        dislikes INT,
+        created_at TIME
+    );`
+
+	createCommentsTable := `
+    CREATE TABLE IF NOT EXISTS Comments (
+        comment_id VARCHAR(36) PRIMARY KEY NOT NULL,
+        post_uuid  VARCHAR(36) NOT NULL,
+        user_uuid  VARCHAR(36) NOT NULL,
+        content TEXT,
+        username TEXT,
+        profile_picture MEDIUMTEXT,
+        created_at TIME
+    );`
+
+	// Exécute les requêtes pour créer les tables
+	queries := []string{createUsersTable, createPostsTable, createCommentsTable}
+	for _, query := range queries {
+		_, err := Db.Exec(query)
+		if err != nil {
+			log.Fatalf("Erreur lors de la création des tables : %v", err)
+		}
+	}
+
+	log.Println("Tables créées ou déjà existantes")
 }
 
 // runQuery exécute une requête SQL avec des paramètres et renvoie les résultats
@@ -61,8 +110,9 @@ func InitConnection() {
 *---------------------------------------------------------------------------------------------------------
 */
 func RunDatabaseQuery(ctx context.Context, query string, params ...any) ([]map[string]any, error) {
-
-	re := regexp.MustCompile(`(?i)<[^>]+>|(SELECT|UPDATE|DELETE|INSERT|DROP|FROM|COUNT|AS|WHERE|--)|^\s|^\s*$|<script.*?>.*?</script.*?>`)
+	// Désactiver la validation si les requêtes préparées sont utilisées
+	// ou ajuster le regex pour éviter les faux positifs
+	re := regexp.MustCompile(`(?i)<[^>]+>|<script.*?>.*?</script.*?>`)
 
 	for _, value := range params {
 		valueToRead, ok := value.(string)
@@ -75,12 +125,6 @@ func RunDatabaseQuery(ctx context.Context, query string, params ...any) ([]map[s
 		}
 	}
 
-	//----------------------------------------------------------------------//
-	// Prépare la requête
-	// Voir ./database.go "var Db *sql.DB"
-	// params ex: "SELECT * FROM users"
-	//----------------------------------------------------------------------//
-
 	rows, err := Db.QueryContext(ctx, query, params...)
 	if err != nil {
 		log.Printf("Erreur lors de l'exécution de la requête : %v", err)
@@ -88,13 +132,10 @@ func RunDatabaseQuery(ctx context.Context, query string, params ...any) ([]map[s
 	}
 	defer rows.Close()
 
-	// Récupère les colonnes de la requête
 	columns, err := rows.Columns()
 	if err != nil {
 		return nil, err
 	}
-
-	// Création d'une slice pour stocker les valeurs
 
 	values := make([]any, len(columns))
 	valuePtrs := make([]any, len(columns))
@@ -102,18 +143,13 @@ func RunDatabaseQuery(ctx context.Context, query string, params ...any) ([]map[s
 		valuePtrs[i] = &values[i]
 	}
 
-	// Stockage des résultats dans une liste de maps
-	// Tous les éléments trouvés sont stockés et renvoyés
-
 	var results []map[string]any
 	for rows.Next() {
-		// Remplit les valeurs pour la ligne actuelle
 		if err := rows.Scan(valuePtrs...); err != nil {
 			log.Printf("Erreur lors du scan des résultats : %v", err)
 			return nil, err
 		}
 
-		// Crée une map pour la ligne
 		row := make(map[string]any)
 		for i, col := range columns {
 			val := values[i]
